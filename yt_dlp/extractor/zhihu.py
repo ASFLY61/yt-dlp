@@ -1,5 +1,5 @@
 from .common import InfoExtractor
-from ..utils import format_field, float_or_none, int_or_none
+from ..utils import float_or_none, format_field, int_or_none
 
 
 class ZhihuIE(InfoExtractor):
@@ -20,7 +20,7 @@ class ZhihuIE(InfoExtractor):
             'view_count': int,
             'like_count': int,
             'comment_count': int,
-        }
+        },
     }
 
     def _real_extract(self, url):
@@ -45,7 +45,6 @@ class ZhihuIE(InfoExtractor):
                 'url': play_url,
                 'width': int_or_none(q.get('width')),
             })
-        self._sort_formats(formats)
 
         author = zvideo.get('author') or {}
         url_token = author.get('url_token')
