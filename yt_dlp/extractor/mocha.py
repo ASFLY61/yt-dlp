@@ -3,7 +3,7 @@ from ..utils import int_or_none, traverse_obj
 
 
 class MochaVideoIE(InfoExtractor):
-    _VALID_URL = r'https?://video.mocha.com.vn/(?P<video_slug>[\w-]+)'
+    _VALID_URL = r'https?://video\.mocha\.com\.vn/(?P<video_slug>[\w-]+)'
     _TESTS = [{
         'url': 'http://video.mocha.com.vn/chuyen-meo-gia-su-tu-thong-diep-cuoc-song-v18694039',
         'info_dict': {
@@ -20,8 +20,8 @@ class MochaVideoIE(InfoExtractor):
             'timestamp': 1652254203,
             'upload_date': '20220511',
             'comment_count': int,
-            'categories': ['Kids']
-        }
+            'categories': ['Kids'],
+        },
     }]
 
     def _real_extract(self, url):
@@ -41,8 +41,6 @@ class MochaVideoIE(InfoExtractor):
                     video.get('video_path'), video_id, ext='mp4')
                 formats.extend(fmts)
                 self._merge_subtitles(subs, target=subtitles)
-
-        self._sort_formats(formats)
 
         return {
             'id': video_id,

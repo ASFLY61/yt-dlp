@@ -1,23 +1,37 @@
-import contextlib
+import inspect
 import os
 
-from ..utils import load_plugins
+from ..globals import LAZY_EXTRACTORS
+from ..globals import extractors as _extractors_context
 
-_LAZY_LOADER = False
-if not os.environ.get('YTDLP_NO_LAZY_EXTRACTORS'):
-    with contextlib.suppress(ImportError):
-        from .lazy_extractors import *  # noqa: F403
-        from .lazy_extractors import _ALL_CLASSES
-        _LAZY_LOADER = True
+_CLASS_LOOKUP = None
+if os.environ.get('YTDLP_NO_LAZY_EXTRACTORS'):
+    LAZY_EXTRACTORS.value = False
+else:
+    try:
+        from .lazy_extractors import _CLASS_LOOKUP
+        LAZY_EXTRACTORS.value = True
+    except ImportError:
+        LAZY_EXTRACTORS.value = None
 
-if not _LAZY_LOADER:
-    from ._extractors import *  # noqa: F403
-    _ALL_CLASSES = [  # noqa: F811
-        klass
-        for name, klass in globals().items()
+if not _CLASS_LOOKUP:
+    from . import _extractors
+
+    _CLASS_LOOKUP = {
+        name: value
+        for name, value in inspect.getmembers(_extractors)
         if name.endswith('IE') and name != 'GenericIE'
-    ]
-    _ALL_CLASSES.append(GenericIE)  # noqa: F405
+    }
+    _CLASS_LOOKUP['GenericIE'] = _extractors.GenericIE
 
-_PLUGIN_CLASSES = load_plugins('extractor', 'IE', globals())
-_ALL_CLASSES = list(_PLUGIN_CLASSES.values()) + _ALL_CLASSES
+# We want to append to the main lookup
+_current = _extractors_context.value
+for name, ie in _CLASS_LOOKUP.items():
+    _current.setdefault(name, ie)
+
+
+def __getattr__(name):
+    value = _CLASS_LOOKUP.get(name)
+    if not value:
+        raise AttributeError(f'module {__name__} has no attribute {name}')
+    return value

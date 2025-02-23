@@ -23,7 +23,7 @@ class FreeTvMoviesIE(FreeTvBaseIE):
             'title': 'Atrápame Si Puedes',
             'description': 'md5:ca63bc00898aeb2f64ec87c6d3a5b982',
             'ext': 'mp4',
-        }
+        },
     }, {
         'url': 'https://www.freetv.com/peliculas/monstruoso/',
         'md5': '509c15c68de41cb708d1f92d071f20aa',
@@ -32,7 +32,7 @@ class FreeTvMoviesIE(FreeTvBaseIE):
             'title': 'Monstruoso',
             'description': 'md5:333fc19ee327b457b980e54a911ea4a3',
             'ext': 'mp4',
-        }
+        },
     }]
 
     def _extract_video(self, content_id, action='olyott_video_play'):
@@ -43,7 +43,6 @@ class FreeTvMoviesIE(FreeTvBaseIE):
 
         video_id, video_url = api_response['displayMeta']['contentID'], api_response['displayMeta']['streamURLVideo']
         formats, subtitles = self._extract_m3u8_formats_and_subtitles(video_url, video_id, 'mp4')
-        self._sort_formats(formats)
 
         return {
             'id': video_id,
@@ -73,7 +72,7 @@ class FreeTvIE(FreeTvBaseIE):
         'info_dict': {
             'id': 'el-detective-l',
             'title': 'El Detective L',
-            'description': 'md5:f9f1143bc33e9856ecbfcbfb97a759be'
+            'description': 'md5:f9f1143bc33e9856ecbfcbfb97a759be',
         },
         'playlist_count': 24,
     }, {
@@ -81,7 +80,7 @@ class FreeTvIE(FreeTvBaseIE):
         'info_dict': {
             'id': 'esmeraldas',
             'title': 'Esmeraldas',
-            'description': 'md5:43d7ec45bd931d8268a4f5afaf4c77bf'
+            'description': 'md5:43d7ec45bd931d8268a4f5afaf4c77bf',
         },
         'playlist_count': 62,
     }, {
@@ -89,7 +88,7 @@ class FreeTvIE(FreeTvBaseIE):
         'info_dict': {
             'id': 'las-aventuras-de-leonardo',
             'title': 'Las Aventuras de Leonardo',
-            'description': 'md5:0c47130846c141120a382aca059288f6'
+            'description': 'md5:0c47130846c141120a382aca059288f6',
         },
         'playlist_count': 13,
     },
@@ -106,7 +105,6 @@ class FreeTvIE(FreeTvBaseIE):
         for episode in episodes:
             video_id = str(episode['contentID'])
             formats, subtitles = self._extract_m3u8_formats_and_subtitles(episode['streamURL'], video_id, 'mp4')
-            self._sort_formats(formats)
 
             yield {
                 'id': video_id,
